@@ -1,0 +1,25 @@
+{
+  "name": "react-bus"
+  , "private": true
+  , "version": "0.0.1"
+  , "main": "./react-bus.js"
+  , "dependencies": {
+    "react": "0.10.0"
+  }
+  , "devDependencies": {
+    "tape": "*"
+  }, "testling": {
+    "files": "test/*.js"
+    , "browsers": [
+      "ie/8..latest"
+      , "chrome/22..latest"
+      , "firefox/16..latest"
+      , "safari/4..latest"
+      , "opera/10.0..latest"
+      , "iphone/6"
+      , "ipad/6"
+    ]
+  }, "scripts": {
+    "test": "browserify test/index.js | testling -x 'firefox-trunk'"
+  }
+}
