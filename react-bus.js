@@ -2,6 +2,17 @@
 ;(function () {
   "use strict";
 
+  // shim bind
+  if (typeof Function.prototype.bind !== "function") {
+    Function.prototype.bind = function (bind) {
+        var self = this;
+        return function () {
+            var args = Array.prototype.slice.call(arguments);
+            return self.apply(bind || null, args);
+        };
+    };
+  }
+
   var ReactBus = function () {
     this.listeners = {};
 
@@ -70,7 +81,7 @@
 
     // if no function was passed, delete all event handlers of `e`.
     if (typeof fn === "undefined") {
-      delete this.listeners[e];
+      this.listeners[e] = undefined;
       return ;
     }
 
@@ -88,7 +99,7 @@
       this.listeners[e] = newLs;
     } else {
       // if there are no handlers left just remove the entire entry.
-      delete this.listeners[e];
+      this.listeners[e] = undefined;
     }
   };
 

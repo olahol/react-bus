@@ -3,9 +3,6 @@
   , "private": true
   , "version": "0.0.1"
   , "main": "./react-bus.js"
-  , "dependencies": {
-    "react": "0.10.0"
-  }
   , "devDependencies": {
     "tape": "*"
   }, "testling": {
