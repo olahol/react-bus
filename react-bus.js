@@ -2,7 +2,7 @@
 ;(function () {
   "use strict";
 
-  // shim bind
+  // a shim for bind
   if (typeof Function.prototype.bind !== "function") {
     Function.prototype.bind = function (bind) {
         var self = this;
@@ -17,8 +17,9 @@
     this.listeners = {};
 
     this.counts = {
-      "_drop": 0 // convenient so we don't have to test against `undefined`
-                 // to check whether we have dropped any events.
+      "_drop": 0, // convenient so we don't have to test against `undefined`
+                  // to check whether we have dropped any events.
+      "_all": 0
     };
   };
 
@@ -31,18 +32,22 @@
     this.counts[e] = this.counts[e] ? this.counts[e] + 1 : 1;
 
     if (!this.listeners[e]) {
-      // don't register a drop on "_drop"
-      if (e !== "_drop") {
-        this.emit("_drop", e);
+      // don't register a drop on "_drop" or "_all"
+      if (e !== "_drop" && e !== "_all") {
+        this.emit("_drop", e, args);
       }
-      return ;
     }
 
-    var ls = this.listeners[e];
+    var ls = this.listeners[e] || [];
     for (var i = 0; i < ls.length; i += 1) {
       if (typeof ls[i] === "function") {
         ls[i].apply(this, args);
       }
+    }
+
+    // register an "_all" event when the event is not "_all" or "_drop".
+    if (e !== "_all" && e !== "_drop") {
+      this.emit("_all", e, args);
     }
   };
 
@@ -81,7 +86,7 @@
 
     // if no function was passed, delete all event handlers of `e`.
     if (typeof fn === "undefined") {
-      this.listeners[e] = undefined;
+      delete this.listeners[e];
       return ;
     }
 
@@ -99,7 +104,7 @@
       this.listeners[e] = newLs;
     } else {
       // if there are no handlers left just remove the entire entry.
-      this.listeners[e] = undefined;
+      delete this.listeners[e];
     }
   };
 

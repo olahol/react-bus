@@ -24,20 +24,43 @@ test("once & emit & handle", function (t) {
   bus.handle("test", 2)("event");
 });
 
-test("drop", function (t) {
-  t.plan(1);
+test("drop and all", function (t) {
+  t.plan(4);
 
   var bus = new ReactBus();
 
-  bus.on("_drop", function (n) {
-    t.equal(n, "test");
+  bus.on("_drop", function (e, args) {
+    t.equal(e, "test");
+    t.equal(args[0], 1);
+  });
+
+  bus.on("_all", function (e, args) {
+    t.equal(e, "test");
+    t.equal(args[0], 1);
+  });
+
+  bus.emit("test", 1);
+});
+
+test("all", function (t) {
+  t.plan(3);
+
+  var bus = new ReactBus();
+
+  bus.on("test", function (n) {
+    t.equal(n, 1);
+  });
+
+  bus.on("_all", function (e, args) {
+    t.equal(e, "test");
+    t.equal(args[0], 1);
   });
 
   bus.emit("test", 1);
 });
 
 test("counts", function (t) {
-  t.plan(2);
+  t.plan(3);
 
   var bus = new ReactBus();
 
@@ -49,6 +72,7 @@ test("counts", function (t) {
 
   t.equal(bus.counts.test, 5);
   t.equal(bus.counts._drop, 5);
+  t.equal(bus.counts._all, 5);
 });
 
 test("off", function (t) {

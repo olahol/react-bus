@@ -1,7 +1,7 @@
 {
   "name": "react-bus"
   , "private": true
-  , "version": "0.0.1"
+  , "version": "0.0.2"
   , "main": "./react-bus.js"
   , "devDependencies": {
     "tape": "*"
@@ -18,5 +18,6 @@
     ]
   }, "scripts": {
     "test": "browserify test/index.js | testling -x 'firefox-trunk'"
+    , "lint": "jshint react-bus.js test/index.js"
   }
 }
